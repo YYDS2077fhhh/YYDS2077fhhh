@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>坟墓</title>
+    <title>YYDS2077</title>
     <style>
+        :root {
+            --background-color: #1F2544;
+            --text-color: #304463;
+            --info-bg-color: #F0F3FF;
+            --info-border-color: #7D8ABC;
+            --card-bg-color: rgba(255, 255, 255, 0.1);
+        }
         body {
             display: flex;
             flex-direction: column;
@@ -12,42 +19,41 @@
             align-items: flex-start;
             height: 100vh;
             margin: 0;
-            background-color: #1F2544;
+            background-color: var(--background-color);
             font-family: Arial, sans-serif;
             padding: 20px;
-            color: #304463;
-            overflow-y: scroll; /* 允许垂直滚动 */
+            color: var(--text-color);
+            overflow-y: scroll;
         }
-        .profile-container {
+        .profile-card {
             display: flex;
-            align-items: flex-start; /* 头像和名字向上对齐 */
-            position: fixed; /* 固定在顶部 */
-            top: 0; /* 顶部位置 */
+            align-items: center;
+            background-color: var(--card-bg-color);
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
-            height: 110px; /* 适当的高度 */
-            backdrop-filter: blur(10px); /* 模糊效果 */
             z-index: 10;
-            padding: 20px; /* 顶部和左右填充 */
-            box-sizing: border-box; /* 包含填充在内 */
+            transition: transform 0.3s ease;
         }
         .avatar {
-            width: 110px; /* 默认大小 */
-            height: 110px; /* 默认大小 */
+            width: 110px;
+            height: 110px;
             object-fit: cover;
             border: 4px solid #fff;
-            transition: width 0.5s, height 0.5s; /* 过渡效果 */
-            margin-top: 0px; /* 顶部间距 */
+            transition: width 0.5s, height 0.5s;
+            margin-right: 20px;
         }
         .avatar.shrink {
-            width: 60px; /* 缩小后的大小 */
-            height: 60px; /* 缩小后的大小 */
+            width: 60px;
+            height: 60px;
         }
         .name {
-            font-size: 2rem;
-            margin-left: 20px;
+            font-size: 1.6rem;
             font-weight: bold;
-            background: linear-gradient(45deg, #81689D, #FFD0EC, #474F7A);
+            background: linear-gradient(45deg, #c4b4d6, #FFD0EC, #474F7A);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
@@ -58,25 +64,23 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
         .info-container {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
             width: 100%;
-            margin-top: 20px; /* 调整顶部间距 */
-            margin-bottom: 20px; /* 增加底部间距 */
-            cursor: pointer;
+            margin-top: 150px;
         }
-
         .info-box {
-            background-color: #F0F3FF;
-            border: solid #7D8ABC; /* 去掉圆角 */
-            padding: 10px; /* 减少上下填充 */
+            background-color: var(--info-bg-color);
+            border: solid var(--info-border-color);
+            padding: 12px;
             text-align: left;
-            transition: all 0.5s;
+            transition: all 0.1s;
+            text-decoration: none; /* 移除链接下划线 */
+            color: inherit; /* 继承父元素的颜色 */
         }
-
         .info-box:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
             box-shadow: 12px 12px 16px rgba(255, 255, 255, 0.1);
         }
         .info-box img {
@@ -86,46 +90,105 @@
         .info-box p {
             margin: 0;
         }
+        .special-card {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        .special-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(8px);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .special-card .content {
+            position: relative;
+            padding: 20px;
+            color: white;
+            z-index: 1;
+        }
+        /* 媒体查询 */
+        @media (max-width: 600px) {
+            .profile-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .avatar {
+                width: 80px;
+                height: 80px;
+                margin-right: 0;
+            }
+            .name {
+                font-size: 1.4rem;
+            }
+            .info-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (min-width: 601px) and (max-width: 1200px) {
+            .profile-card {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .avatar {
+                width: 100px;
+                height: 100px;
+            }
+            .name {
+                font-size: 1.5rem;
+            }
+            .info-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1201px) {
+            .info-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="profile-container" id="profile-container">
-        <img src="头像.jpg" alt="头像" class="avatar" id="avatar">
-        <h1 class="name">二零七七的电子坟墓</h1>
+    <div class="profile-card" id="profile-card">
+        <img src="头像.jpg" alt="用户头像" class="avatar" id="avatar">
+        <h1 class="name">这里是七七?的抽象网站</h1>
     </div>
 
-    <div class="info-container">
-        <div class="info-box">
-            <p>不知道写什么</p>
-        </div>
-    </div>
-
-    <div class="info-container">
-        <div class="info-box">
-            <img src="20170724154927_XuGFv.jpg" alt="图片">
-            <p>啊啊啊啊啊</p>
-        </div>
-    </div>
-
-    <div class="info-container">
-        <div class="info-box">
-            <img src="20170724154927_XuGFv.jpg" alt="图片">
-            <p>啊啊啊啊啊</p>
+    <div>
+        <div class="info-container">
+            <a href="链接2.html" class="info-box">
+                <img src="爱你们.png" alt="描述性文字">
+                <p>不知道写什么 网站正在装修中 敬请期待~bushi</p>
+            </a>
+            <a href="链接3.html" class="info-box">
+                <img src="啊啊啊.png" alt="描述性文字">
+                <p>精神状态不佳qwq</p>
+            </a>
         </div>
     </div>
 
     <script>
         const avatar = document.getElementById('avatar');
+        const profileCard = document.getElementById('profile-card');
+        let lastScrollTop = 0;
 
         window.addEventListener('scroll', function() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop === 0) {
-                // 在顶部，放大头像
-                avatar.classList.remove('shrink');
+
+            if (scrollTop > lastScrollTop) {
+                // 向上滑动
+                profileCard.style.transform = 'translateY(-100%)'; // 隐藏头像和名字
             } else {
-                // 向下滚动，缩小头像
-                avatar.classList.add('shrink');
+                // 向下滑动
+                profileCard.style.transform = 'translateY(0)'; // 显示头像和名字
             }
+
+            lastScrollTop = scrollTop;
         });
     </script>
 </body>
